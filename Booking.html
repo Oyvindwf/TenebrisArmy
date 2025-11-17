@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking – Tenebris Army</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="tour.html">Tour</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li class="dropdown">
+          <a href="store.html">Store</a>
+          <div class="dropdown-content">
+            <a href="https://spreadshirt.example.com" target="_blank">Merch</a>
+            <a href="https://elasticstage.com/tenebrisarmy" target="_blank">Music</a>
+          </div>
+        </li>
+        <li><a href="booking.html" class="active">Booking</a></li>
+        <li><a href="game.html">Game</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="booking-hero">
+      <div class="booking-content">
+        <h1 data-aos="fade-up">Book Tenebris Army</h1>
+        <p data-aos="fade-up" data-aos-delay="150">Bring fire and thunder to your stage.</p>
+        <button class="booking-button" onclick="toggleForm()" data-aos="fade-up" data-aos-delay="300">Contact Us</button>
+      </div>
+    </section>
+
+   <div id="booking-form" class="booking-form-container" data-aos="fade-up" data-aos-delay="100">
+  <form action="https://formspree.io/f/xldbvwkb" method="POST">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="6" required></textarea>
+    </div>
+
+    <button type="submit">Send Booking Request</button>
+  </form>
+  </main>
+
+ <footer>
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/profile.php?id=100063564101835" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
+      <a href="https://www.instagram.com/tenebrisarmy/" target="_blank"><img src="images/instagram.png" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@tenebrisarmyofficial?is_from_webapp=1&sender_device=pc" target="_blank"><img src="images/tiktok.png" alt="TikTok"></a>
+      <a href="https://www.youtube.com/@tenebrisarmy5257/videos" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+      <a href="https://open.spotify.com/artist/5MqvEVbgP8hbfrXpxsgzjY?si=4fBxanYGSImI3DMzLw8mgw" target="_blank"><img src="images/spotify.png" alt="Spotify"></a>
+    </div>
+    <p>&copy; 2025 Tenebris Army</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    function toggleForm() {
+      const form = document.getElementById("booking-form");
+      form.style.display = form.style.display === "block" ? "none" : "block";
+    }
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

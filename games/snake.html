@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+  <title>Snake of Steel – Tenebris Army</title>
+  <style>
+:root {
+  --main-red: #f45;
+  --main-bg: rgba(0,0,0,0.93);
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: url("../images/game-bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  font-family: monospace;
+  color: #fff;
+  min-height: 100vh;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden; /* Prevent vertical scroll */
+}
+#main-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  justify-content: flex-start;
+}
+.back-button {
+  display: block;
+  position: absolute;
+  top: 22px; left: 24px;
+  font-size: 1rem;
+  padding: 8px 16px;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 30;
+}
+h1 {
+  margin-top: 54px;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 0 8px var(--main-red);
+  font-size: 2.1rem;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+  position: relative;
+  letter-spacing: 1px;
+}
+.game-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100vw;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 0;
+  position: relative;
+}
+.center-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 660px;
+  max-width: 95vw;
+  position: relative;
+}
+.canvas-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+canvas {
+  background-color: #000;
+  border: 4px solid var(--main-red);
+  box-shadow: 0 0 30px rgba(255, 69, 85, 0.6);
+  display: block;
+  margin: 0 auto;
+}
+.menu-modal {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.menu-modal.active {
+  display: flex;
+  pointer-events: auto;
+}
+.menu {
+  background: var(--main-bg);
+  border-radius: 18px;
+  box-shadow: 0 0 22px var(--main-red), 0 0 8px #000a inset;
+  color: white;
+  text-align: center;
+  border: 3px solid var(--main-red);
+  padding: 24px 24px 18px 24px;
+  width: 66%;
+  max-width: 360px;
+  min-width: 220px;
+  min-height: 210px;
+  z-index: 20;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.menu button, .menu select {
+  font-size: 1rem;
+  padding: 10px 16px;
+  margin: 11px 6px 0 6px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  background: var(--main-red);
+  color: white;
+}
+#leaderboard {
+  background: rgba(0,0,0,0.93);
+  border-radius: 18px;
+  box-shadow: 0 0 22px var(--main-red), 0 0 8px #000a inset;
+  padding: 22px 14px 16px 14px;
+  color: white;
+  font-size: 1.13rem;
+  border: 3px solid var(--main-red);
+  min-width: 160px;
+  max-width: 220px;
+  width: 200px;
+  z-index: 16;
+  display: block;
+  position: fixed;
+  top: 36px;
+  right: 36px;
+}
+#leaderboard h3 { margin: 0 0 8px 0; color: var(--main-red); font-size: 1.2rem; }
+#leaderboard ol { margin: 0; padding-left: 1.2em; color: #fff; }
+.score-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+  margin-bottom: 0;
+  gap: 2px;
+}
+.score, .highscore, .toggle-status {
+  font-size: 1.12rem;
+  text-shadow: 0 0 3px black;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.hidden { display: none !important; }
+.countdown {
+  font-size: 2.1rem;
+  color: var(--main-red);
+  margin-top: 16px;
+  text-shadow: 0 0 10px black;
+}
+.touch-controls { display: none; }
+.touch-controls.visible {
+  margin: 30px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  z-index: 2;
+  width: 100%;
+}
+.dpad-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+.touch-controls button.arrow {
+  background: #222;
+  color: var(--main-red);
+  font-size: 2.05rem;
+  width: 54px;
+  height: 54px;
+  border: 2px solid #444;
+  border-radius: 16px;
+  margin: 2px;
+  outline: none;
+  box-shadow: 0 0 8px #0009;
+  transition: background 0.2s, color 0.2s;
+}
+.touch-controls button.arrow:active { background: var(--main-red); color: #fff; }
+.pause-btn {
+  background: var(--main-red);
+  color: #fff;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  margin: 18px 0 0 0;
+  padding: 12px 28px;
+  box-shadow: 0 0 8px #0009;
+  width: 99vw;
+  max-width: 320px;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: #222;
+  color: #fff;
+  padding: 22px;
+  border-radius: 10px;
+  max-width: 97vw;
+  text-align: left;
+  box-shadow: 0 0 12px var(--main-red);
+  position: relative;
+}
+.modal h2 { color: var(--main-red); margin-top: 0; }
+.modal ul { padding-left: 20px; }
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: var(--main-red);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+@media (max-width: 1000px) {
+  .game-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 99vw;
+  }
+  #leaderboard {
+    position: static;
+    margin: 24px auto 0 auto;
+    width: 92vw;
+    max-width: 97vw;
+    left: 0; right: 0; top: unset;
+    border-radius: 18px;
+    box-shadow: 0 0 22px var(--main-red), 0 0 8px #000a inset;
+  }
+}
+@media (max-width: 700px) {
+  h1 { margin-top: 60px; font-size: 1.2rem; }
+  .back-button { font-size: 0.98rem; top: 10px; left: 8px; padding: 7px 11px; }
+  .center-stack { max-width: 99vw; }
+  .canvas-wrap { width: 99vw; }
+  canvas#game {
+    width: 97vw !important; height: 97vw !important; min-width: 120px; min-height: 120px; max-width: 99vw;
+  }
+  .menu {
+  max-width: 90vw !important;
+  min-width: 0;
+  width: 90vw;
+  font-size: 0.99rem;
+  padding: 0px 0px !important;   /* Crop top/bottom padding */
+  min-height: 0 !important;       /* Allow it to shrink vertically */
+  box-sizing: border-box;
+}
+}
+@media (max-width: 480px) {
+  #main-wrap { padding-top: 0; }
+  .back-button { font-size: 0.97rem; padding: 7px 8px; }
+  .score-group { margin-top: 9px; }
+  canvas#game { width: 95vw !important; height: 95vw !important; min-width: 90px; min-height: 90px; }
+  .menu { font-size: 0.96rem; }
+}
+/* Swap leaderboard & score on mobile */
+@media (max-width: 700px) {
+  .game-layout {
+    flex-direction: column;
+  }
+  #leaderboard {
+    order: 3;
+    margin-top: 14px;
+    margin-bottom: 0;
+  }
+  .score-group {
+    order: 2;
+    margin-top: 4vw;
+    margin-bottom: 0;
+  }
+}
+  </style>
+</head>
+<body>
+<div id="main-wrap">
+  <a class="back-button" href="../game.html">⟵ Back to Games</a>
+  <h1>Snake of Steel</h1>
+  <div class="game-layout">
+    <div class="center-stack">
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="game" width="600" height="600"></canvas>
+        <div class="menu-modal" id="menu-modal">
+          <div class="menu" id="menu">
+            <h2>Snake of Steel</h2>
+            <p style="margin: 0 0 8px 0;">Select difficulty:</p>
+            <select id="difficulty">
+              <option value="150">Easy</option>
+              <option value="100" selected>Normal</option>
+              <option value="70">Brutal</option>
+            </select><br>
+            <button onclick="initiateStart()">Start Game</button><br>
+            <button onclick="document.getElementById('settingsModal').classList.add('active')">⚙ Settings</button>
+            <button onclick="document.getElementById('helpModal').classList.add('active')">🛈 Help</button>
+            <div class="countdown" id="countdown"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Touch Controls -->
+      <div class="touch-controls" id="touch-controls">
+        <button class="arrow up" aria-label="Up">▲</button>
+        <div class="dpad-row">
+          <button class="arrow left" aria-label="Left">◀</button>
+          <button class="arrow down" aria-label="Down">▼</button>
+          <button class="arrow right" aria-label="Right">▶</button>
+        </div>
+        <button class="pause-btn" type="button">⏸ Pause</button>
+      </div>
+      <div class="score-group">
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="highscore">High Score: <span id="high">0</span></div>
+        <div class="toggle-status">
+          Music: <span id="music-status">ON</span> | SFX: <span id="sfx-status">ON</span>
+        </div>
+      </div>
+    </div>
+    <div id="leaderboard">
+      <h3>Top Scores</h3>
+      <ol id="leaderboard-list"></ol>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal" onclick="this.classList.remove('active')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="close" onclick="document.getElementById('settingsModal').classList.remove('active')">×</button>
+    <h2>⚙ Game Settings</h2>
+    <div style="margin-top: 20px">
+      <button onclick="toggleMusic()">Toggle Music</button>
+      <button onclick="toggleSFX()">Toggle SFX</button>
+    </div>
+  </div>
+</div>
+<!-- Help Modal -->
+<div class="modal-overlay" id="helpModal" onclick="this.classList.remove('active')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="close" onclick="document.getElementById('helpModal').classList.remove('active')">×</button>
+    <h2>🛈 How to Play Snake of Steel</h2>
+    <p><strong>Goal:</strong> Eat the green squares to grow your snake and increase your score.</p>
+    <p><strong>Controls:</strong> Use the Arrow Keys (← ↑ → ↓) or the on-screen arrows on mobile. Tap Pause to pause.</p>
+    <p><strong>Difficulty:</strong> Affects game speed. Brutal is very fast!</p>
+    <p><strong>Game Over:</strong> If you hit the wall or your own body, the game ends with a visual shock.</p>
+    <p><strong>Tips:</strong></p>
+    <ul>
+      <li>Plan your turns ahead to avoid corners.</li>
+      <li>Use the Pause feature by pressing <strong>P</strong> or the Pause button.</li>
+      <li>Enter your initials for the leaderboard if you get a high score!</li>
+    </ul>
+  </div>
+</div>
+<script src="../js/snake.js"></script>
+</body>
+</html>

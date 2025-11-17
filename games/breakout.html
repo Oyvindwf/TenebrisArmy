@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Breakout of Doom — Tenebris Army (v3)</title>
+  <style>
+    /* ====== THEME (heavy-metal) ====== */
+    :root{
+      --metal1:#0e0f12; --metal2:#1a1c22; --metal3:#2a2f38; --glow:#c0f; --blood:#e21; --steel:#cdd4db;
+      --accent:#9eff00; --warning:#ffb703; --shadow:rgba(0,0,0,.55);
+      --rim:#2e3440;
+    }
+    html,body{height:100%;background:radial-gradient(1200px 800px at 70% 30%, #1b1f29, #0a0b0f) fixed;color:#eee;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",sans-serif}
+    a{color:#fff}
+
+    /* ====== LAYOUT WRAPPER ====== */
+    .wrap{min-height:100%;padding:16px;display:grid;place-items:center}
+    .shell{width:min(100%,1200px);display:grid;grid-template-columns:1fr 280px;gap:14px;align-items:start}
+    @media (max-width: 1000px){ .shell{grid-template-columns:1fr} }
+
+    /* ====== GAME FRAME ====== */
+    .frame{background:linear-gradient(180deg,var(--metal2),var(--metal1));border-radius:16px;box-shadow:0 20px 60px var(--shadow), inset 0 0 0 1px var(--rim);position:relative;overflow:hidden}
+    .frame .topbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #2b2f39;background:linear-gradient(180deg,#14161b,#0e0f12)}
+    .title{display:flex;gap:10px;align-items:center}
+    .logo{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,#444,#111);box-shadow:inset 0 0 12px #000,0 0 14px #000;color:var(--accent);font-weight:900}
+    .wordmark{font-weight:900;letter-spacing:1px}
+
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .toggles{display:flex;gap:10px;align-items:center}
+    .stat{display:flex;gap:6px;align-items:center;color:#cfd7e6;font-size:14px}
+    select, .toggle{background:#13161d;border:1px solid #2d3440;color:#ddd;border-radius:8px;padding:6px 10px}
+
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    button{appearance:none;border:1px solid #2f3440;background:linear-gradient(180deg,#242833,#171a22);color:#e6e6e6;padding:8px 12px;border-radius:10px;cursor:pointer;box-shadow:0 6px 12px var(--shadow), inset 0 0 0 1px #0009;transition:transform .06s ease, box-shadow .2s ease}
+    button:hover{transform:translateY(-1px)}
+    button:active{transform:translateY(0)}
+    button.primary{border-color:#4d0066;background:radial-gradient(100% 100% at 30% 20%,#3b0a57,#1c0f2a);box-shadow:0 10px 25px #9f36ff33, inset 0 0 0 1px #e7b3ff12}
+    button.warn{border-color:#5a2}
+
+    .stats{display:flex;gap:16px;align-items:center;color:#cfd7e6;font-size:14px}
+    .glow{color:var(--accent);text-shadow:0 0 10px #8aff0033,0 0 24px #8aff0055}
+
+    .game{position:relative;}
+    canvas{display:block;width:100%;height:auto;background:linear-gradient(180deg,#0b0d12,#0a0a0a)}
+
+    /* On-screen controls (mobile) */
+    .hud{position:absolute;inset:auto 0 10px 0;display:flex;justify-content:center;gap:16px;pointer-events:none}
+    .padBtn{pointer-events:auto;user-select:none;-webkit-user-select:none;width:64px;height:64px;border-radius:14px;display:grid;place-items:center;border:1px solid #2b2f39;background:linear-gradient(180deg,#1b1f27,#0f1116);box-shadow:0 8px 18px var(--shadow)}
+    .padBtn:active{transform:scale(.98)}
+
+    /* Overlays */
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,#0a0b1050,#0a0b10c5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+    .card{max-width:min(700px,92%);border-radius:18px;border:1px solid #323847;background:linear-gradient(180deg,#141823,#0d0f15);box-shadow:0 30px 80px var(--shadow);padding:22px;color:#e7e7ee}
+    .card h2{margin:0 0 10px;font-size:22px}
+    .grid{display:grid;gap:8px}
+    .flex{display:flex;gap:10px;flex-wrap:wrap}
+    .kbd{display:inline-block;background:#0f1218;border:1px solid #2c3340;border-radius:6px;padding:2px 6px;font-size:12px}
+
+    /* decorative rim */
+    .rim::before{content:"";position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,#7b61ff33,#ff2b7033,#00ffd533);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+
+    /* ====== SIDEBAR (leaderboard + back) ====== */
+    .side{position:relative;background:linear-gradient(180deg,#121520,#0b0d14);border:1px solid var(--rim);border-radius:16px;box-shadow:0 20px 60px var(--shadow), inset 0 0 0 1px #0009;padding:14px}
+    .back{display:inline-block;margin-bottom:8px;background:#2c2f38;border:1px solid #3a4150;border-radius:10px;padding:8px 12px;text-decoration:none}
+    .lb h3{margin:6px 0 10px 0;color:var(--blood)}
+    .lb ol{margin:0;padding-left:1.2em}
+
+    /* small helper classes */
+    .hidden{display:none!important}
+  /* Fallback if CSS masking isn't supported */
+@supports not ((-webkit-mask: none) or (mask: none)){
+  .rim::before{content:none}
+  .frame.rim{border:1px solid transparent;background:
+    linear-gradient(180deg,var(--metal2),var(--metal1)) padding-box,
+    linear-gradient(135deg,#7b61ff33,#ff2b7033,#00ffd533) border-box;}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="shell">
+      <div class="frame rim" id="gameFrame">
+        <div class="topbar">
+          <div class="title">
+            <div class="logo">⚡</div>
+            <div class="wordmark">HEAVY METAL BREAKOUT</div>
+          </div>
+          <div class="toolbar">
+            <div class="toggles">
+              <label class="stat">Difficulty
+                <select id="difficulty">
+                  <option value="easy">Easy</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="hard">Hard</option>
+                  <option value="insane">Insane</option>
+                </select>
+              </label>
+              <label class="stat">Music <input id="musicToggle" type="checkbox" class="toggle" checked></label>
+              <label class="stat">SFX <input id="sfxToggle" type="checkbox" class="toggle" checked></label>
+            </div>
+            <div class="btns">
+              <button id="startBtn" class="primary">Start</button>
+              <button id="pauseBtn">Pause</button>
+              <button id="helpBtn" class="warn">Help</button>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat">Score: <span id="score" class="glow">0</span></div>
+            <div class="stat">Lives: <span id="lives">3</span></div>
+            <div class="stat">Level: <span id="level">1</span></div>
+            <div class="stat">Best: <span id="best">0</span></div>
+          </div>
+        </div>
+
+        <div class="game" id="gameRoot">
+          <canvas id="game" width="1000" height="660" aria-label="Breakout game canvas" role="img"></canvas>
+
+          <!-- Mobile HUD -->
+          <div class="hud" id="hud">
+            <button class="padBtn" id="leftBtn" aria-label="Move left">◀</button>
+            <button class="padBtn" id="launchBtn" aria-label="Launch">⛧</button>
+            <button class="padBtn" id="rightBtn" aria-label="Move right">▶</button>
+          </div>
+
+          <!-- Intro / Help / Pause / Game Over overlays -->
+          <div class="overlay" id="intro">
+            <div class="card">
+              <h2>Welcome to <span class="glow">Heavy Metal Breakout</span> 🤘</h2>
+              <div class="grid" style="margin-top:8px">
+                <div><strong>Controls</strong></div>
+                <div>Desktop: <span class="kbd">←</span> <span class="kbd">→</span> move • <span class="kbd">Space</span> launch • <span class="kbd">P</span> pause</div>
+                <div>Mobile: drag anywhere to move • center button to launch</div>
+              </div>
+              <div class="flex" style="margin-top:12px">
+                <button id="introStart" class="primary">Start Game</button>
+                <button id="introHelp">Show Help</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="overlay hidden" id="help">
+            <div class="card">
+              <h2>How to Play</h2>
+              <ul>
+                <li>💥 Power-ups: [⛧] multi-ball, [🜏] heavy ball, [🜍] widen paddle, [✺] slow time.</li>
+                <li>🎚️ Difficulty changes ball speed, brick HP, and lives.</li>
+                <li>💾 High score table saved locally on your device.</li>
+              </ul>
+              <div class="flex" style="margin-top:8px">
+                <button id="closeHelp" class="primary">Back</button>
+                <button id="startFromHelp">Play</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="overlay hidden" id="paused">
+            <div class="card">
+              <h2>⏸️ Paused — Press <span class="kbd">P</span> or tap Resume</h2>
+              <div class="flex" style="margin-top:10px">
+                <button id="resumeBtn" class="primary">Resume</button>
+                <button id="restartBtn">Restart</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="overlay hidden" id="gameover">
+            <div class="card">
+              <h2>Game Over</h2>
+              <p>Your score: <span id="finalScore">0</span></p>
+              <div class="flex" style="margin-top:10px">
+                <button id="againBtn" class="primary">Play Again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar: Back + Leaderboard -->
+      <aside class="side">
+        <a class="back" href="../game.html">⟵ Back to Games</a>
+        <div class="lb">
+          <h3>Top Scores</h3>
+          <ol id="leaderboard-list"></ol>
+          <div style="margin-top:8px;font-size:14px;opacity:.8">Best: <span id="bestSide">0</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Optional legacy audio assets (if present on your site these will auto‑play) -->
+    <audio id="bg-music" loop>
+      <source src="../audio/breakout-theme.mp3" type="audio/mp3">
+    </audio>
+    <audio id="sfx-hit"><source src="../audio/hit.wav" type="audio/wav"></audio>
+    <audio id="sfx-lose"><source src="../audio/lose.wav" type="audio/wav"></audio>
+    <audio id="sfx-win"><source src="../audio/win.wav" type="audio/wav"></audio>
+    <audio id="sfx-death"><source src="../audio/death.wav" type="audio/wav"></audio>
+  </div>
+
+  <script src="../js/breakout.js" defer></script>
+</body>
+</html>

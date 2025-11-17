@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tenebris Arcade</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <style>
+    /* --- Game Hub Styling --- */
+    .game-hub {
+      min-height: 100vh;
+      background: linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)),
+                  url("images/arcade-bg.jpg") no-repeat center top;
+      background-size: cover;
+      padding: 80px 20px;
+      color: white;
+      text-align: center;
+    }
+
+    .game-hub h1 {
+      font-size: 3rem;
+      margin-bottom: 40px;
+      color: #f45;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .game-tile {
+      background-color: #222;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 12px rgba(255, 69, 85, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: white;
+    }
+
+    .game-tile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(255, 69, 85, 0.4);
+    }
+
+    .game-tile h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #f45;
+    }
+
+    .game-tile p {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="tour.html">Tour</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li class="dropdown">
+          <a href="store.html">Store</a>
+          <div class="dropdown-content">
+            <a href="https://spreadshirt.example.com" target="_blank">Merch</a>
+            <a href="https://elasticstage.com/tenebrisarmy" target="_blank">Music</a>
+          </div>
+        </li>
+        <li><a href="booking.html">Booking</a></li>
+        <li><a href="game.html" class="active">Game</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="game-hub">
+    <h1 data-aos="fade-up">Tenebris Army Arcade</h1>
+    <div class="game-grid">
+      <a href="games/snake.html" class="game-tile" data-aos="fade-up">
+        <h2>Snake</h2>
+        <p>Collect guitar picks, avoid crashing. Classic reimagined in metal pixels!</p>
+      </a>
+      <a href="games/breakout.html" class="game-tile" data-aos="fade-up" data-aos-delay="100">
+        <h2>Breakout</h2>
+        <p>Smash the wall of amps. Use your paddle. Make it loud!</p>
+      </a>
+      <a href="games/textadventure.html" class="game-tile" data-aos="fade-up" data-aos-delay="200">
+        <h2>Text Adventure</h2>
+        <p>Choose your path to metal glory. Or doom.</p>
+      </a>
+      <a href="games/platformer.html" class="game-tile" data-aos="fade-up" data-aos-delay="300">
+        <h2>Platformer</h2>
+        <p>Jump, shred, survive. Defeat the Lords of Silence!</p>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/profile.php?id=100063564101835" target="_blank"><img src="images/facebook.png" alt="Facebook"></a>
+      <a href="https://www.instagram.com/tenebrisarmy/" target="_blank"><img src="images/instagram.png" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@tenebrisarmyofficial?is_from_webapp=1&sender_device=pc" target="_blank"><img src="images/tiktok.png" alt="TikTok"></a>
+      <a href="https://www.youtube.com/@tenebrisarmy5257/videos" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+      <a href="https://open.spotify.com/artist/5MqvEVbgP8hbfrXpxsgzjY?si=4fBxanYGSImI3DMzLw8mgw" target="_blank"><img src="images/spotify.png" alt="Spotify"></a>
+    </div>
+    <p>&copy; 2025 Tenebris Army</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>
