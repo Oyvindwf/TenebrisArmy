@@ -213,7 +213,7 @@ footer {
   height: 100vh;
   background-image: 
   linear-gradient(rgba(10, 10, 10, 0.24), rgba(10, 10, 10, 0.24)),
-  url("../images/home-bg.jpg");
+  url("../images/background/home-bg.jpg");
   background-repeat: no-repeat, repeat, no-repeat;
   background-position: center top, center center, center top;
   background-size: cover, cover, cover;
@@ -272,7 +272,7 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("../images/smoke-overlay.gif") center center / cover no-repeat;
+  background: url("../images/background/smoke-overlay.gif") center center / cover no-repeat;
   opacity: 0.25; /* subtle and atmospheric */
   z-index: 0;
   pointer-events: none; /* makes sure embeds stay clickable */
@@ -283,7 +283,6 @@ footer {
   z-index: 1;
   background: transparent;
 }
-
 
 
 /* --- Responsive Styles --- */
@@ -343,7 +342,6 @@ footer {
     border-radius: 10px;
   }
 }
-
 
 /* --- ABOUT PAGE STYLES --- */
 body.about-page {
@@ -462,7 +460,7 @@ body.about-page {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("../images/thunderstorm.gif") center center / cover no-repeat;
+  background: url("../images/background/thunderstorm.gif") center center / cover no-repeat;
   opacity: 0.4; /* adjust to taste */
   z-index: -1;
   pointer-events: none;
@@ -509,7 +507,7 @@ body.about-page {
 
 body.tour-page {
   background: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)),
-              url("../images/tour-bg.jpg") no-repeat center top;
+              url("../images/background/tour-bg.jpg") no-repeat center top;
   background-size: cover;
   background-attachment: fixed;
   color: white;
@@ -578,7 +576,6 @@ body.tour-page {
   font-style: italic;
   font-size: 14px;
 }
-
 
 /* --- Gallery Page Styling --- */
 
@@ -728,13 +725,12 @@ main h1 {
   color: white;
   min-height: 100vh;
   background: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)),
-              url("../images/store-bg.jpg") no-repeat center top;
+              url("../images/background/store-bg.jpg") no-repeat center top;
   background-size: cover;
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* keeps it flowing downward */
 }
-
 
 
 .store-page h1 {
@@ -777,7 +773,7 @@ main h1 {
 .booking-hero {
   height: 160vh;
   background: linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)),
-              url("../images/booking-bg.jpg") no-repeat center top;
+              url("../images/background/booking-bg.jpg") no-repeat center top;
   background-size: cover;
   position: relative;
   overflow: hidden;
@@ -970,3 +966,77 @@ main h1 {
   .home-overlay-text p { font-size: 0.9rem; }
   .media-block h2 { font-size: 1.1rem; }
 }
+
+/* Standardized Coming Soon layout.
+   Designed to NOT fight your existing theme.
+   No hard-coded colors unless your site has none. */
+
+.cs-wrap{
+  min-height: calc(100vh - 120px);
+  display: grid;
+  place-items: center;
+  padding: 2.25rem 1rem;
+}
+
+.cs-card{
+  width: min(820px, 100%);
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+}
+
+.cs-badge{
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  border: 1px solid rgba(255,255,255,0.14);
+  margin-bottom: 1rem;
+}
+
+.cs-card h1{
+  margin: 0 0 0.75rem;
+}
+
+.cs-card p{
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  max-width: 65ch;
+}
+
+.cs-actions{
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.cs-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.05);
+}
+
+.cs-btn:hover{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.22);
+}
+
+.cs-hint{
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+

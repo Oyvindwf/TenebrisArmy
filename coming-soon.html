@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coming Soon – Tenebris Army</title>
+
+  <!-- REQUIRED: global CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="coming-soon-page">
+
+  <!-- HEADER (keep your existing structure) -->
+  <header>
+    <nav>
+      <button class="hamburger" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="navbar">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="tour.html">Tour</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+
+        <li class="dropdown">
+          <a href="store.html" class="dropbtn">Store</a>
+          <div class="dropdown-content">
+            <a href="https://spreadshirt.example.com" target="_blank" rel="noopener">Merch</a>
+            <a href="https://elasticstage.com/tenebrisarmy" target="_blank" rel="noopener">Music</a>
+          </div>
+        </li>
+
+        <li><a href="booking.html">Booking</a></li>
+        <li><a href="game.html">Game</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main class="coming-soon-wrap">
+    <section class="coming-soon-card" aria-label="Coming soon">
+      <h1>Coming Soon</h1>
+      <p class="coming-soon-text">
+        This page is currently under construction. We’re forging something worthy.
+      </p>
+
+      <div class="coming-soon-actions">
+        <a class="coming-soon-btn" href="index.html">Back to Home</a>
+        <a class="coming-soon-btn secondary" href="tour.html">See Tour Dates</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (same as all other pages) -->
+  <footer>
+    <!-- GIF MUST BE INSIDE FOOTER to anchor to the footer edge reliably -->
+    <img
+      src="images/effect/Tuning-Guitar.gif"
+      alt="Guitar tuning animation"
+      class="coming-soon-gif"
+      loading="eager"
+      decoding="async"
+    />
+
+    <div class="footer-socials">
+      <a href="https://www.facebook.com/profile.php?id=100063564101835" target="_blank" rel="noopener">
+        <img src="images/icon/facebook.png" alt="Facebook">
+      </a>
+      <a href="https://www.instagram.com/tenebrisarmy/" target="_blank" rel="noopener">
+        <img src="images/icon/instagram.png" alt="Instagram">
+      </a>
+      <a href="https://www.tiktok.com/@tenebrisarmyofficial?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener">
+        <img src="images/icon/tiktok.png" alt="TikTok">
+      </a>
+      <a href="https://www.youtube.com/@tenebrisarmy5257/videos" target="_blank" rel="noopener">
+        <img src="images/icon/youtube.png" alt="YouTube">
+      </a>
+      <a href="https://open.spotify.com/artist/5MqvEVbgP8hbfrXpxsgzjY" target="_blank" rel="noopener">
+        <img src="images/icon/spotify.png" alt="Spotify">
+      </a>
+    </div>
+    <p>&copy; 2025 Tenebris Army</p>
+  </footer>
+
+  <!-- REQUIRED: global script -->
+  <script src="js/main.js"></script>
+
+  <!-- PAGE-ONLY STYLES -->
+  <style>
+    /* =========================================================
+       SINGLE TUNING KNOB (ONLY)
+       If the GIF is 5–10px off, tweak this by ±10px.
+       Negative = sinks slightly into the footer edge.
+       Positive = floats slightly above the footer edge.
+       ========================================================= */
+    :root{
+      --footer-top-offset: -6px;
+      --ta-red: #f45;
+    }
+
+    /* Keep page scoped + stable */
+    body.coming-soon-page{
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Main wrap matches your style: centered card, one-screen on desktop */
+    .coming-soon-wrap{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+
+      /* give room so footer + gif never collide visually */
+      padding-bottom: clamp(120px, 12vw, 180px);
+    }
+
+    .coming-soon-card{
+      max-width: 640px;
+      width: 100%;
+      background: rgba(0,0,0,0.55);
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 0 20px rgba(255, 69, 85, 0.18);
+      border: 1px solid rgba(255, 69, 85, 0.22);
+      position: relative;
+      z-index: 5;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .coming-soon-tag{
+      letter-spacing: 0.25em;
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-bottom: 10px;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+
+    .coming-soon-card h1{
+      margin: 0 0 8px;
+      font-size: clamp(2.2rem, 4.8vw, 2.8rem);
+      color: var(--ta-red);
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+      line-height: 1.05;
+    }
+
+    .coming-soon-text{
+      margin: 0 auto 18px;
+      max-width: 52ch;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: #ddd;
+    }
+
+    .coming-soon-actions{
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .coming-soon-btn{
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: var(--ta-red);
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.10);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .coming-soon-btn:hover{
+      background: #ff6666;
+      transform: scale(1.05);
+    }
+
+    .coming-soon-btn.secondary{
+      background: rgba(255,255,255,0.14);
+    }
+
+    .coming-soon-btn.secondary:hover{
+      background: rgba(255,255,255,0.24);
+    }
+
+    /* =========================================================
+       FOOTER-ANCHORED GIF (robust)
+       - anchored to footer, NOT to vh math
+       - on desktop: appears to stand on the footer top edge
+       - stays behind footer content
+       ========================================================= */
+    footer{
+      position: relative; /* anchor for absolute gif */
+      z-index: 0;
+    }
+
+    .coming-soon-gif{
+      position: absolute;
+
+      /* Anchor the character to the TOP EDGE of the footer */
+      bottom: calc(100% + var(--footer-top-offset));
+
+      /* Desktop placement */
+      right: clamp(-8px, 1vw, 0px);
+
+      width: 420px;
+      height: auto;
+      max-width: 62vw;
+
+      pointer-events: none;
+      z-index: 0; /* behind footer content */
+      transform: translateZ(0);
+    }
+
+    /* Ensure footer icons/text render above the gif */
+    footer .footer-socials,
+    footer p{
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================================
+       MOBILE
+       - smaller gif
+       - bottom-right
+       - must not cover card/buttons
+       - no weird scroll jumps (gif scrolls with footer)
+       ========================================================= */
+    @media (max-width: 768px){
+      .coming-soon-wrap{
+        padding: 70px 16px 24px;
+        padding-bottom: 190px;
+      }
+
+      .coming-soon-gif{
+        width: 240px;           /* smaller than desktop */
+        right: -10px;
+        max-width: 70vw;
+      }
+    }
+
+    @media (max-width: 420px){
+      .coming-soon-gif{
+        width: 210px;
+        right: -8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .coming-soon-btn{
+        transition: none;
+      }
+    }
+  </style>
+</body>
+</html>
