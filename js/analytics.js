@@ -50,3 +50,49 @@
     });
   });
 })();
+
+// Track outbound link clicks site-wide (outbound_click)
+(function () {
+  function categorizeOutbound(url) {
+    const u = url.toLowerCase();
+
+    if (u.includes('spotify.com')) return 'spotify';
+    if (u.includes('instagram.com')) return 'instagram';
+    if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+    if (u.includes('tiktok.com')) return 'tiktok';
+    if (u.includes('elasticstage.com')) return 'merch';
+    if (u.includes('spreadshirt')) return 'merch';
+    if (u.includes('bandcamp.com')) return 'merch';
+    return 'external';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (typeof window.gtag !== 'function') return;
+
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    // Ignore non-http links (mailto:, tel:, #anchors)
+    const href = link.getAttribute('href') || '';
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+    // Resolve to absolute URL
+    let url;
+    try {
+      url = new URL(href, window.location.href);
+    } catch {
+      return;
+    }
+
+    const isExternal = url.hostname !== window.location.hostname;
+    if (!isExternal) return;
+
+    const category = categorizeOutbound(url.href);
+
+    window.gtag('event', 'outbound_click', {
+      outbound_category: category,
+      outbound_url: url.href,
+      outbound_text: (link.textContent || '').trim().slice(0, 100)
+    });
+  });
+})();
