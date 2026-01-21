@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Tenebris Breakout</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <canvas id="game" aria-label="Breakout canvas"></canvas>
+
+      <div id="ui" class="ui">
+        <!-- HUD -->
+        <div id="hud" class="hud hidden">
+          <div class="hud-left">
+            <span id="hud-mode">ARCADE</span>
+            <span class="sep">•</span>
+            <span id="hud-diff">NORMAL</span>
+            <span class="sep">•</span>
+            <span id="hud-level">LV 1</span>
+          </div>
+
+          <div class="hud-right">
+            <span id="hud-score">0</span>
+            <span class="sep">•</span>
+            <span id="hud-lives">♥♥♥</span>
+
+            <button id="btn-info" class="icon-btn" title="Info" aria-label="Info">i</button>
+            <button id="btn-pause" class="icon-btn" title="Pause" aria-label="Pause">❚❚</button>
+          </div>
+        </div>
+
+        <!-- MENU -->
+        <div id="screen-menu" class="screen">
+          <div class="panel">
+            <h1 class="title">TENEBRIS<br />BREAKOUT</h1>
+            <p class="subtitle">Skulls • Fire • Gain</p>
+
+            <div class="row">
+              <label class="label">Mode</label>
+              <div class="seg" role="tablist" aria-label="Mode select">
+                <button class="seg-btn active" data-mode="arcade">Arcade</button>
+                <button class="seg-btn" data-mode="campaign">Campaign</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="label">Difficulty</label>
+              <div class="seg" role="tablist" aria-label="Difficulty select">
+                <button class="seg-btn" data-diff="easy">Easy</button>
+                <button class="seg-btn active" data-diff="normal">Normal</button>
+                <button class="seg-btn" data-diff="hard">Hard</button>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button id="btn-start" class="btn primary">Start</button>
+              <button id="btn-leaderboard" class="btn">Leaderboard</button>
+              <button id="btn-settings" class="btn">Settings</button>
+              <button id="btn-help" class="btn">Info</button>
+            </div>
+
+            <p class="tiny">Desktop: mouse or keys • Mobile: drag or touch buttons (toggle in Settings)</p>
+          </div>
+        </div>
+
+        <!-- PAUSE -->
+        <div id="screen-pause" class="screen hidden">
+          <div class="panel">
+            <h2 class="title-sm">PAUSED</h2>
+            <div class="btn-row">
+              <button id="btn-resume" class="btn primary">Resume</button>
+              <button id="btn-restart" class="btn">Restart</button>
+              <button id="btn-menu" class="btn">Main Menu</button>
+            </div>
+            <p class="tiny">Press P to resume</p>
+          </div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="screen-gameover" class="screen hidden">
+          <div class="panel">
+            <h2 class="title-sm">GAME OVER</h2>
+            <p class="subtitle">Score: <span id="go-score">0</span></p>
+            <div class="btn-row">
+              <button id="btn-go-restart" class="btn primary">Restart</button>
+              <button id="btn-go-menu" class="btn">Main Menu</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="screen-leaderboard" class="screen hidden">
+          <div class="panel wide">
+            <div class="panel-head">
+              <h2 class="title-sm">LEADERBOARD</h2>
+              <button id="btn-lb-back" class="btn small">Back</button>
+            </div>
+
+            <div class="row">
+              <label class="label">Difficulty</label>
+              <div class="seg" aria-label="Leaderboard difficulty tabs">
+                <button class="seg-btn active" data-lb="easy">Easy</button>
+                <button class="seg-btn" data-lb="normal">Normal</button>
+                <button class="seg-btn" data-lb="hard">Hard</button>
+              </div>
+            </div>
+
+            <div id="lb-list" class="lb-list">
+              <div class="lb-item muted">Supabase will be wired later.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFO -->
+<div id="screen-info" class="screen hidden">
+  <div class="panel wide">
+    <div class="panel-head">
+      <h2 class="title-sm">INFO</h2>
+      <button id="btn-info-back" class="btn small">Back</button>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Info tabs">
+      <button class="tab-btn active" data-info-tab="basics" role="tab">Basics</button>
+      <button class="tab-btn" data-info-tab="modes" role="tab">Modes</button>
+      <button class="tab-btn" data-info-tab="powerups" role="tab">Power-ups</button>
+      <button class="tab-btn" data-info-tab="controls" role="tab">Controls</button>
+      <button class="tab-btn" data-info-tab="scoring" role="tab">Scoring</button>
+    </div>
+
+    <div class="tab-content">
+      <!-- BASICS -->
+      <section class="info-section" data-info-panel="basics">
+        <h3>What this is</h3>
+        <p>
+          Tenebris Breakout is a fast arcade Breakout with endless score potential.
+          Clear bricks, survive, and climb levels. Later we’ll wire global leaderboards
+          (separate per difficulty).
+        </p>
+
+        <h3>Lives / health</h3>
+        <ul>
+          <li>Easy starts with <b><span id="info-lives-easy">5</span></b> lives.</li>
+          <li>Normal starts with <b><span id="info-lives-normal">3</span></b> lives.</li>
+          <li>Hard starts with <b><span id="info-lives-hard">2</span></b> lives.</li>
+          <li>If a ball falls below the paddle, you lose a life.</li>
+          <li>With Multi-ball, you only lose a life when <b>all balls</b> are gone.</li>
+        </ul>
+
+        <h3>Performance guardrails</h3>
+        <ul>
+          <li>Max balls at once: <b><span id="info-max-balls">3</span></b> (prevents phone lag).</li>
+        </ul>
+      </section>
+
+      <!-- MODES -->
+      <section class="info-section hidden" data-info-panel="modes">
+        <h3>Game modes</h3>
+        <ul>
+          <li><b>Arcade</b> — endless run: clear the board → next level → repeat.</li>
+          <li><b>Campaign</b> — more structured pacing/layout feel (still level-based).</li>
+        </ul>
+
+        <h3>Difficulty</h3>
+        <ul>
+          <li><b>Easy</b> — wider paddle, slower ball, more lives.</li>
+          <li><b>Normal</b> — balanced.</li>
+          <li><b>Hard</b> — smaller paddle, faster ball, fewer lives.</li>
+        </ul>
+
+        <p class="tiny muted">
+          Leaderboards will be separate per difficulty to keep it fair.
+        </p>
+      </section>
+
+      <!-- POWERUPS -->
+      <section class="info-section hidden" data-info-panel="powerups">
+        <h3>Power-ups (v1)</h3>
+        <p>Power-ups sometimes drop from destroyed bricks. Catch them with the paddle.</p>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-badge">W</div>
+            <div>
+              <div class="info-title">Widen Paddle</div>
+              <div class="info-desc">Temporary wider paddle (easier saves).</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-badge">S</div>
+            <div>
+              <div class="info-title">Slow Ball</div>
+              <div class="info-desc">Temporary slower ball speed.</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-badge">M</div>
+            <div>
+              <div class="info-title">Multi-ball</div>
+              <div class="info-desc">Spawns extra balls (capped for performance).</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-badge">L</div>
+            <div>
+              <div class="info-title">Laser Paddle</div>
+              <div class="info-desc">Temporary lasers, ammo-limited. Damages bricks.</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-badge">⛨</div>
+            <div>
+              <div class="info-title">Shield</div>
+              <div class="info-desc">Prevents one ball-loss when a ball would fall.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTROLS -->
+      <section class="info-section hidden" data-info-panel="controls">
+        <h3>Controls</h3>
+        <ul>
+          <li><b>Launch</b>: Click/Tap or press <b>Space</b></li>
+          <li><b>Pause</b>: <b>P</b> or the <b>❚❚</b> button</li>
+          <li><b>Move paddle</b>:
+            <ul>
+              <li><b>Desktop</b>: A/D or Arrow keys (choose in Settings)</li>
+              <li><b>Mobile</b>: Drag-to-move OR touch buttons (toggle in Settings)</li>
+            </ul>
+          </li>
+          <li><b>Laser fire (while active)</b>: press <b>F</b> on desktop</li>
+        </ul>
+      </section>
+
+      <!-- SCORING -->
+      <section class="info-section hidden" data-info-panel="scoring">
+        <h3>Scoring</h3>
+        <ul>
+          <li>Breaking bricks gives points.</li>
+          <li>Tougher bricks give partial points until they break.</li>
+          <li>Higher levels → more bricks → more scoring chances.</li>
+        </ul>
+
+        <h3>Future upgrades (optional)</h3>
+        <ul>
+          <li>Combo / streak multipliers</li>
+          <li>No-miss bonuses</li>
+          <li>Difficulty-based score scaling</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+        <!-- SETTINGS -->
+        <div id="screen-settings" class="screen hidden">
+          <div class="panel wide">
+            <div class="panel-head">
+              <h2 class="title-sm">SETTINGS</h2>
+              <button id="btn-settings-back" class="btn small">Back</button>
+            </div>
+
+            <div class="grid">
+              <div class="setting">
+                <div class="setting-title">Music</div>
+                <div class="setting-row">
+                  <label><input id="music-toggle" type="checkbox" checked /> On</label>
+                  <input id="music-vol" type="range" min="0" max="1" step="0.01" value="0.6" />
+                </div>
+              </div>
+
+              <div class="setting">
+                <div class="setting-title">SFX</div>
+                <div class="setting-row">
+                  <label><input id="sfx-toggle" type="checkbox" checked /> On</label>
+                  <input id="sfx-vol" type="range" min="0" max="1" step="0.01" value="0.7" />
+                </div>
+              </div>
+
+              <div class="setting">
+                <div class="setting-title">Mobile controls</div>
+                <div class="setting-row">
+                  <label><input id="touch-buttons-toggle" type="checkbox" /> Show touch buttons</label>
+                </div>
+                <div class="tiny muted">Drag-to-move is always available.</div>
+              </div>
+
+              <div class="setting">
+                <div class="setting-title">Desktop keys</div>
+                <div class="setting-row">
+                  <select id="desktop-keys">
+                    <option value="ad" selected>A / D</option>
+                    <option value="arrows">← / →</option>
+                    <option value="both">Both</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="touch-controls" class="touch-controls hidden" aria-label="Touch controls">
+              <button id="touch-left" class="touch-btn">◄</button>
+              <button id="touch-right" class="touch-btn">►</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
